@@ -1,5 +1,5 @@
 # PhanQuyen
-Script database QLBV: https://drive.google.com/file/d/14noepM6OKlubsnAP-W54utsxEXh-zDne/view?usp=sharing
+Script database QLBV: https://drive.google.com/drive/folders/1etzTCNI81sNz-fyzoLyZTZ7zkKLmc1UI?usp=sharing
 
 Mô tả ràng buộc toàn vẹn: https://docs.google.com/document/d/1o8ngioAbWFlNQzqc5tEpr9MWDhFZOmuYadqknxlDpho/edit?fbclid=IwAR2UUSr9AYRbJ7265xz0_Zhpk6hROPQ73uJxQ9ThnbU5zWqorRvX037jhmg
 
