@@ -1,0 +1,5 @@
+BenhNhan, Thuoc, Khoa, BoPhan, CaTruc, LoaiDichVu
+Phong, ThangNam, NhanVien,
+LichSuKhamBenh, HoaDon
+ChamCong, 
+DonThuoc, CT_DonThuoc, TTDV
