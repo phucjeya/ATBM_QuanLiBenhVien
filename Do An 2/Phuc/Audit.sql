@@ -1,4 +1,4 @@
---Th?c hi?n enable audit,disable audit trong oracle.
+--Th?c hi?n enable audit,disable audit tren sqlplus trong oracle.
 --enable audit 
 alter system set audit_trail=db ,extended scope=spfile;-- enable audit
 shutdown immediate;
