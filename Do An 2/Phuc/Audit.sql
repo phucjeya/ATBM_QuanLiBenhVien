@@ -1,4 +1,4 @@
---Th?c hi?n enable audit,disable audit tren sqlplus trong oracle.
+--Th?c hi?n enable audit,disable audit trong oracle.
 --enable audit 
 alter system set audit_trail=db ,extended scope=spfile;-- enable audit
 shutdown immediate;
@@ -18,6 +18,9 @@ audit select,insert,update, delete on HOADON by access;
 audit select,insert,update, delete on BENHNHAN by access;
 
 --FGA Lieu Luong cua CT_DonThuoc
+Create or Replace Procedure Proc_Track_LieuLuong_CT_DonThuoc
+as
+begin
 BEGIN
   DBMS_FGA.ADD_POLICY(
    object_schema      => 'BVaudit',
@@ -28,7 +31,11 @@ BEGIN
    audit_column       => 'LIEULUONG',
    audit_trail        =>  DBMS_FGA.DB + DBMS_FGA.EXTENDED);
 END;
+end;
 --FGA tren Gia cua bang Thuoc
+Create or Replace Procedure Proc_Track_Gia_Thuoc
+as
+begin
 BEGIN
   DBMS_FGA.ADD_POLICY(
    object_schema      => 'BVaudit',
@@ -39,6 +46,7 @@ BEGIN
    audit_column       => 'GIA',
    audit_trail        =>  DBMS_FGA.DB + DBMS_FGA.EXTENDED);
 END;
+end;
 --Kiem tra audit trail cua fga
 --select OS_USER,USERHOST,OBJECT_NAME,SQL_TEXT,EXTENDED_TIMESTAMP from dba_fga_audit_trail ;
 
