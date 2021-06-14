@@ -6,3 +6,5 @@ Mô tả ràng buộc toàn vẹn: https://docs.google.com/document/d/1o8ngioAbW
 Lược đồ quan hệ: https://app.diagrams.net/?fbclid=IwAR3dPWonQ3jLILovzB-h-Yy_O3jR8BmuLuxGfqU3n_ylhq77iOiv2g9dP8c#G1XKZzNpw0jeHljN6KLBw0S3s8r_-zowV0
 
 ER: https://drive.google.com/file/d/15HkWnvkED7fLbsPW3W9hzX-OwUxThBwe/view?usp=sharing
+
+Đề: https://drive.google.com/drive/folders/1jtesq4jTPbqIoJDdHoJhxkz69GBLxk2J
