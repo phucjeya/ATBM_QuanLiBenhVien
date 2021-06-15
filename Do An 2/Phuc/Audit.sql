@@ -1,4 +1,4 @@
---Th?c hi?n enable audit,disable audit trong oracle.
+--Thuc hien enable audit,disable audit trong oracle.
 --enable audit 
 alter system set audit_trail=db ,extended scope=spfile;-- enable audit
 shutdown immediate;
@@ -28,10 +28,11 @@ BEGIN
    policy_name        => 'Track_LieuLuong_CT_DonThuoc',
    enable             =>  TRUE,
    statement_types    => 'INSERT, UPDATE, DELETE',
-   audit_column       => 'LIEULUONG',
+   audit_column       => 'LIEULUONG,MATHUOC,MADONTHUOC',
    audit_trail        =>  DBMS_FGA.DB + DBMS_FGA.EXTENDED);
 END;
 end;
+/
 --FGA tren Gia cua bang Thuoc
 Create or Replace Procedure Proc_Track_Gia_Thuoc
 as
@@ -56,4 +57,4 @@ audit insert,update,delete on DONTHUOC by access WHENEVER SUCCESSFUL;
 ---Giam sat truy van khi co loi:
 audit insert,update on ChamCong by access WHENEVER NOT SUCCESSFUL;
 --Kiem tra du lieu audit cua he thong
-SELECT username,OS_USERNAME,USERHOST,extended_timestamp,obj_name,action_name FROM dba_audit_trail ;
+SELECT username,OS_USERNAME,USERHOST,SQL_TEXT,extended_timestamp,obj_name,action_name FROM dba_audit_trail ;
