@@ -12,15 +12,14 @@ startup
 --alter session set "_oracle_script" =true;
 --create USER BVaudit IDENTIFIED BY "123";
 --grant create session to BVaudit;
+--grant all privileges to BVaudit;
 --Audit
 audit select,insert,update, delete on HOADON by access;
 --Audit
 audit select,insert,update, delete on BENHNHAN by access;
 
 --FGA Lieu Luong cua CT_DonThuoc
-Create or Replace Procedure Proc_Track_LieuLuong_CT_DonThuoc
-as
-begin
+
 BEGIN
   DBMS_FGA.ADD_POLICY(
    object_schema      => 'BVaudit',
@@ -31,7 +30,7 @@ BEGIN
    audit_column       => 'LIEULUONG,MATHUOC,MADONTHUOC',
    audit_trail        =>  DBMS_FGA.DB + DBMS_FGA.EXTENDED);
 END;
-end;
+
 /
 --FGA tren Gia cua bang Thuoc
 Create or Replace Procedure Proc_Track_Gia_Thuoc
@@ -49,12 +48,13 @@ BEGIN
 END;
 end;
 --Kiem tra audit trail cua fga
---select OS_USER,USERHOST,OBJECT_NAME,SQL_TEXT,EXTENDED_TIMESTAMP from dba_fga_audit_trail ;
-
+--
+select DB_USER,OS_USER,USERHOST,OBJECT_NAME,SQL_TEXT,STATEMENT_TYPE,EXTENDED_TIMESTAMP from dba_fga_audit_trail ;
+select* from  dba_fga_audit_trail
 ---Giam sat truy van thanh cong:
-audit insert,update,delete on DONTHUOC by access WHENEVER SUCCESSFUL;
+audit insert,update,delete on BVaudit.CATRUC by access WHENEVER SUCCESSFUL;
 
 ---Giam sat truy van khi co loi:
-audit insert,update on ChamCong by access WHENEVER NOT SUCCESSFUL;
+audit insert,update on BVaudit.ChamCong by access WHENEVER NOT SUCCESSFUL;
 --Kiem tra du lieu audit cua he thong
-SELECT username,OS_USERNAME,USERHOST,SQL_TEXT,extended_timestamp,obj_name,action_name FROM dba_audit_trail ;
+SELECT  username,OS_USERNAME,USERHOST,SQL_TEXT,extended_timestamp,obj_name,action_name FROM dba_audit_trail ;
