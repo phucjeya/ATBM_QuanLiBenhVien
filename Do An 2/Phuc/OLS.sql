@@ -137,20 +137,21 @@ BEGIN
 SA_LABEL_ADMIN.CREATE_LABEL(
     policy_name => 'OLS_POLICY',
     label_tag   => '30000',
-    label_value => 'EXEC',
+    label_value => 'EXEC:PTV,BPBT:CNA,CNB',
     data_label  => TRUE);
-    
+
 SA_LABEL_ADMIN.CREATE_LABEL(
     policy_name => 'OLS_POLICY',
     label_tag   => 21060,
-    label_value => 'MGR:PTV:CNA',
+    label_value => 'MGR:PTV,BPBT:CNA',
     data_label  => TRUE);
 
 SA_LABEL_ADMIN.CREATE_LABEL(
     policy_name => 'OLS_POLICY',
     label_tag   => '21160',
-    label_value => 'MGR:PTV:CNB',
+    label_value => 'MGR:PTV,BPBT:CNB',
     data_label  => TRUE);
+    
 SA_LABEL_ADMIN.CREATE_LABEL(
     policy_name => 'OLS_POLICY',
     label_tag   => '11060',
@@ -161,8 +162,22 @@ SA_LABEL_ADMIN.CREATE_LABEL(
     label_tag   => '11160',
     label_value => 'EMP:PTV:CNB',
     data_label  => TRUE);
+ 
+ SA_LABEL_ADMIN.CREATE_LABEL(
+    policy_name => 'OLS_POLICY',
+    label_tag   => '11260',
+    label_value => 'EMP:BPBT:CNA',
+    data_label  => TRUE);
+
+     SA_LABEL_ADMIN.CREATE_LABEL(
+    policy_name => 'OLS_POLICY',
+    label_tag   => '11360',
+    label_value => 'EMP:BPBT:CNB',
+    data_label  => TRUE);
+    
  END;
  /
+ 
 --select* from dba_sa_labels;
 BEGIN
  SA_POLICY_ADMIN.APPLY_TABLE_POLICY 
@@ -174,25 +189,41 @@ END;
 
 
 Update BENHVIEN.HOADON
-SET COLUMN_OLS = CHAR_TO_LABEL ('OLS_POLICY', 'MGR:PTV:CNA')
-where hoadon.mahoadon like'HDCNA%';
+SET COLUMN_OLS = CHAR_TO_LABEL ('OLS_POLICY', 'EMP:BPBT:CNA')
+where hoadon.mahoadon like'HDCNA%' and manv like 'NVBT%';
 Update BENHVIEN.HOADON
-SET COLUMN_OLS = CHAR_TO_LABEL ('OLS_POLICY', 'MGR:PTV:CNB')
-where hoadon.mahoadon like'HDCNB%'; 
+SET COLUMN_OLS = CHAR_TO_LABEL ('OLS_POLICY', 'EMP:BPBT:CNB')
+where hoadon.mahoadon like'HDCNB%' and manv like 'NVBT%'; 
+Update BENHVIEN.HOADON
+SET COLUMN_OLS = CHAR_TO_LABEL ('OLS_POLICY', 'EMP:PTV:CNA')
+where hoadon.mahoadon like'HDCNB%' and manv like 'NVTV%'; 
+Update BENHVIEN.HOADON
+SET COLUMN_OLS = CHAR_TO_LABEL ('OLS_POLICY', 'EMP:PTV:CNB')
+where hoadon.mahoadon like'HDCNB%' and manv like 'NVTV%'; 
 
 --Tao user
 --conn sys/123 
-
 create user EXEC1 identified by 123;
 grant create session to EXEC1;
-grant select on BENHVIEN.HOADON to EXEC1;
-create user MGR1 identified by 123;
+create user MGR1 identified by 123;--Quan li CNA
 grant create session to MGR1;
-create user MGR2 identified by 123;
-grant create session to EMP1;
+create user MGR2 identified by 123;--QUan Li CNB
+grant create session to MGR2;
+create user EMPTV1 identified by 123;--Nhan Vien  PTV CNA 
+grant create session to EMPTV1;
+create user EMPTV2 identified by 123;--Nhan Vien  PTV CNB
+grant create session to EMPTV2;
+create user EMPBT1 identified by 123;--Nhan Vien  BT CNA 
+grant create session to EMPBT1;
 grant select on BENHVIEN.HOADON to EXEC1;
 grant select on BENHVIEN.HOADON to MGR1;
 grant select on BENHVIEN.HOADON to MGR2;
+grant select on BENHVIEN.HOADON to EMPTV1;
+grant select on BENHVIEN.HOADON to EMPTV2;
+grant select on BENHVIEN.HOADON to EMPBT1;
+
+
+
 
 
 BEGIN
@@ -205,10 +236,21 @@ sa_policy_admin.apply_table_policy
 (policy_name =>'OLS_POLICY',
 schema_name => 'BENHVIEN',
 table_name => 'HOADON',
-table_options => 'READ_CONTROL');
+table_options => 'READ_CONTROL,WRITE_CONTROL');
 END;
 /
 --Gan nhan vao user
+--EXEC
+BEGIN
+    SA_USER_ADMIN.SET_USER_LABELS (
+    policy_name       => 'OLS_POLICY',
+    user_name         => 'EXEC1',
+    max_read_label    => 'EXEC:PTV,BPBT:CNA,CNB',
+    max_write_label   => 'EXEC:PTV,BPBT:CNA,CNB',
+    def_label         => 'EXEC:PTV,BPBT:CNA,CNB',
+    row_label         => 'EXEC:PTV,BPBT:CNA,CNB');
+end;
+--MGR1 chi nhanh A
 Begin
 SA_USER_ADMIN.SET_LEVELS ('OLS_POLICY', 
     'MGR1', 
@@ -220,10 +262,10 @@ SA_USER_ADMIN.SET_LEVELS ('OLS_POLICY',
  sa_user_admin.set_compartments
  (policy_name => 'OLS_POLICY',
  user_name => 'MGR1',
- read_comps => 'PTV',
- write_comps => 'PTV',
- def_comps => 'PTV',
- row_comps => 'PTV');
+ read_comps => 'PTV,BPBT',
+ write_comps => 'PTV,BPBT',
+ def_comps => 'PTV,BPBT',
+ row_comps => 'PTV,BPBT');
  
  sa_user_admin.set_groups
 (policy_name =>'OLS_POLICY',
@@ -234,7 +276,7 @@ def_groups => 'CNA',
 row_groups => 'CNA');
  END;
 /
--Gan nhan cho MGR2
+--Gan nhan cho MGR2
 Begin
 SA_USER_ADMIN.SET_LEVELS ('OLS_POLICY', 
     'MGR2', 
@@ -246,10 +288,10 @@ SA_USER_ADMIN.SET_LEVELS ('OLS_POLICY',
  sa_user_admin.set_compartments
  (policy_name => 'OLS_POLICY',
  user_name => 'MGR2',
- read_comps => 'PTV',
- write_comps => 'PTV',
- def_comps => 'PTV',
- row_comps => 'PTV');
+ read_comps => 'PTV,BPBT',
+ write_comps => 'PTV,BPBT',
+ def_comps => 'PTV,BPBT',
+ row_comps => 'PTV,BPBT');
  
  sa_user_admin.set_groups
 (policy_name =>'OLS_POLICY',
@@ -261,6 +303,111 @@ row_groups => 'CNB');
  END;
 /
 
+--Ban THuoc chi nhanh A
+Begin
+SA_USER_ADMIN.SET_LEVELS ('OLS_POLICY', 
+    'EMPBT1', 
+    'EMP', 
+    'EMP', 
+    'EMP', 
+    'EMP');
+
+ sa_user_admin.set_compartments
+ (policy_name => 'OLS_POLICY',
+ user_name => 'EMPBT1',
+ read_comps => 'BPBT',
+ write_comps => 'BPBT',
+ def_comps => 'BPBT',
+ row_comps => 'BPBT');
+ 
+ sa_user_admin.set_groups
+(policy_name =>'OLS_POLICY',
+user_name =>'EMPBT1',
+read_groups=> 'CNA',
+write_groups=> 'CNA',
+def_groups => 'CNA',
+row_groups => 'CNA');
+ END;
+/
+
+--Ban THuoc chi nhanh B
+Begin
+SA_USER_ADMIN.SET_LEVELS ('OLS_POLICY', 
+    'EMPBT2', 
+    'EMP', 
+    'EMP', 
+    'EMP', 
+    'EMP');
+
+ sa_user_admin.set_compartments
+ (policy_name => 'OLS_POLICY',
+ user_name => 'EMPBT2',
+ read_comps => 'BPBT',
+ write_comps => 'BPBT',
+ def_comps => 'BPBT',
+ row_comps => 'BPBT');
+ 
+ sa_user_admin.set_groups
+(policy_name =>'OLS_POLICY',
+user_name =>'EMPBT2',
+read_groups=> 'CNB',
+write_groups=> 'CNB',
+def_groups => 'CNB',
+row_groups => 'CNB');
+ END;
+/
+--EMPTV1 chi nhanh A
+Begin
+SA_USER_ADMIN.SET_LEVELS ('OLS_POLICY', 
+    'EMPTV1', 
+    'EMP', 
+    'EMP', 
+    'EMP', 
+    'EMP');
+
+ sa_user_admin.set_compartments
+ (policy_name => 'OLS_POLICY',
+ user_name => 'EMPTV1',
+ read_comps => 'PTV',
+ write_comps => 'PTV',
+ def_comps => 'PTV',
+ row_comps => 'PTV');
+ 
+ sa_user_admin.set_groups
+(policy_name =>'OLS_POLICY',
+user_name =>'EMPTV1',
+read_groups=> 'CNA',
+write_groups=> 'CNA',
+def_groups => 'CNA',
+row_groups => 'CNA');
+ END;
+/
+--EMPTV CNB 
+Begin
+SA_USER_ADMIN.SET_LEVELS ('OLS_POLICY', 
+    'EMPTV2', 
+    'EMP', 
+    'EMP', 
+    'EMP', 
+    'EMP');
+
+ sa_user_admin.set_compartments
+ (policy_name => 'OLS_POLICY',
+ user_name => 'EMPTV2',
+ read_comps => 'PTV',
+ write_comps => 'PTV',
+ def_comps => 'PTV',
+ row_comps => 'PTV');
+ 
+ sa_user_admin.set_groups
+(policy_name =>'OLS_POLICY',
+user_name =>'EMPTV2',
+read_groups=> 'CNB',
+write_groups=> 'CNB',
+def_groups => 'CNB',
+row_groups => 'CNB');
+ END;
+/
 --Conn MGR1/123
 --select* from BENHVIEN.HOADON;
 --Conn MGR2/123
