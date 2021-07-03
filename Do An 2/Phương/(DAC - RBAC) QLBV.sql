@@ -230,3 +230,13 @@ EXEC Grant_Role_toUser('NV00515', 'KeToan', 0);
 EXEC Grant_Object_Privs_toRole('KeToan','SELECT', 'CHAMCONG');
 EXEC Grant_Object_Privs_toRole('KeToan','SELECT', 'NHANVIEN');
 -------------%%%%%%%%%-------------------
+--Thuc hien chinh sach cho Tiep Tan va Dieu phoi Benh: duoc quyen them, xoa, sua, tim kiem thong tin benh nhan, duoc dieu phoi benh
+--nhung khong the xem cac thong tin lien quan den so tien cho tung thu tuc kham, xet nghiem hoac chup hinh hoac thong tin thuoc
+--dieu tri benh cho benh nhan
+EXEC Create_Role('TiepTan');
+EXEC Grant_Role_toUser('NV00252', 'TiepTan', 0);
+EXEC Grant_Role_toUser('NV00780', 'TiepTan', 0);
+EXEC Grant_Object_Privs_toRole('TiepTan','SELECT', 'BENHNHAN');
+EXEC Grant_Object_Privs_toRole('TiepTan','UPDATE', 'BENHNHAN');
+EXEC Grant_Object_Privs_toRole('TiepTan','INSERT', 'BENHNHAN');
+EXEC Grant_Object_Privs_toRole('TiepTan','DELETE', 'BENHNHAN');
