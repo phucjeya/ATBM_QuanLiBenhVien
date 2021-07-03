@@ -203,16 +203,19 @@ EXEC Create_User('NV00501', 'NV00501');
 EXEC Create_User('NV00397', 'NV00397');
 --Tai khoan Bac Si
 EXEC Create_User('NV00218', 'NV00218');
-EXEC Create_User('NV00218', 'NV00218');
+EXEC Create_User('NV00469', 'NV00469');
 --Tai khoan Nhan Vien Ban Thuoc
 EXEC Create_User('NV00034', 'NV00034');
 EXEC Create_User('NV00835', 'NV00835');
 --Tai khoan Ke Toan
 EXEC Create_User('NV00622', 'NV00622');
 EXEC Create_User('NV00515', 'NV00515');
---Tai khoan ChamCong
-EXEC Create_User('NV00691', 'NV00691');
-EXEC Create_User('NV00584', 'NV00584');
+-------------%%%%%%%%%-------------------
+--Thuc hien chinh sach cho Bac Si: chi co the them hoac chinh sua thong tin lien quan den viec dieu tri benh
+EXEC Create_Role('BacSi');
+EXEC Grant_Role_toUser('NV00218', 'BacSi', 0);
+EXEC Grant_Role_toUser('NV00469', 'BacSi', 0);
+EXEC Grant_Object_Privs_toRole('BacSi','SELECT, UPDATE', 'LICHSUKHAMBENH');
 -------------%%%%%%%%%-------------------
 --Thuc hien chinh sach cho Nhan Vien bo phan Ban Thuoc: Chi co the nhin thay toa thuoc ma bac si
 --ke cho tung benh nhanh de tinh tien thuoc cho benh nhan ma khong the xem benh nhan benh gi hay bat cu thong tin gi khac.
@@ -236,7 +239,4 @@ EXEC Grant_Object_Privs_toRole('KeToan','SELECT', 'NHANVIEN');
 EXEC Create_Role('TiepTan');
 EXEC Grant_Role_toUser('NV00252', 'TiepTan', 0);
 EXEC Grant_Role_toUser('NV00780', 'TiepTan', 0);
-EXEC Grant_Object_Privs_toRole('TiepTan','SELECT', 'BENHNHAN');
-EXEC Grant_Object_Privs_toRole('TiepTan','UPDATE', 'BENHNHAN');
-EXEC Grant_Object_Privs_toRole('TiepTan','INSERT', 'BENHNHAN');
-EXEC Grant_Object_Privs_toRole('TiepTan','DELETE', 'BENHNHAN');
+EXEC Grant_Object_Privs_toRole('TiepTan','SELECT, UPDATE, INSERT, DELETE', 'BENHNHAN');
