@@ -8,12 +8,13 @@ create or replace function KhongXemBenhNhanKhac(
     return varchar2
     as
         username varchar2(30);
-        dbrole NHANVIEN.VAITRO%TYPE DEFAULT NULL;
+        dbrole nvarchar2(50);
     begin
         username := SYS_CONTEXT ('USERENV', 'SESSION_USER'); --Lay username tu Session, username phai duoc dat giong nhu ma NV trong db
         select VAITRO into dbrole 
         from NHANVIEN
         where MANV = username;
+        
         if(dbrole = 'Bac Si') then 
             return 'MANV =  SYS_CONTEXT(''USERENV'', ''SESSION_USER'')'; --MANV = username
         else 
@@ -32,17 +33,17 @@ policy_function => 'KhongXemBenhNhanKhac'); -- the name of a PL/SQL function
 END;
 
 -----------------%%%%%%%%%%%%%%%%%%%-----------------
---Thuc hien chinh sach: Nhan Vien chi co the xem thong tin cua ban than
+--Thuc hien chinh sach: Nhan Vien chi co the xem thong tin cua ban than, tru ke toan co the xem tat ca
 create or replace function KhongXemNhanVienKhac(
     p_schema IN VARCHAR2 DEFAULT NULL,
     p_object IN VARCHAR2 DEFAULT NULL)
     return varchar2
     as
         username varchar2(30);
-        dbrole NHANVIEN.VAITRO%TYPE DEFAULT NULL;
+        --dbrole nvarchar2(50);
     begin
-    
         username := SYS_CONTEXT ('USERENV', 'SESSION_USER'); --Lay username tu Session, username phai duoc dat giong nhu ma NV trong db
+
         if(username = 'SYSTEM') then 
             return '';
         else
@@ -60,3 +61,9 @@ update_check => true,
 policy_function => 'KhongXemNhanVienKhac'); -- the name of a PL/SQL function
 END;
 -----------------%%%%%%%%%%%%%%%%%%%-----------------
+--BEGIN
+--DBMS_RLS.drop_policy
+--(object_schema => 'SYSTEM',
+--object_name => 'NhanVien',
+--policy_name => 'ThongTin_CaNhan'); -- the name of a PL/SQL function
+--END;
