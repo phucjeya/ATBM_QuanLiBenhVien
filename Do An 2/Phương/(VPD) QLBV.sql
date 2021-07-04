@@ -33,7 +33,7 @@ policy_function => 'KhongXemBenhNhanKhac'); -- the name of a PL/SQL function
 END;
 
 -----------------%%%%%%%%%%%%%%%%%%%-----------------
---Thuc hien chinh sach: Nhan Vien chi co the xem thong tin cua ban than, tru ke toan co the xem tat ca
+--Thuc hien chinh sach: Nhan Vien chi co the xem thong tin cua ban than
 create or replace function KhongXemNhanVienKhac(
     p_schema IN VARCHAR2 DEFAULT NULL,
     p_object IN VARCHAR2 DEFAULT NULL)
@@ -58,6 +58,17 @@ object_name => 'NhanVien',
 policy_name => 'ThongTin_CaNhan',
 statement_types => 'SELECT',
 update_check => true,
+policy_function => 'KhongXemNhanVienKhac'); -- the name of a PL/SQL function
+END;
+-----------------%%%%%%%%%%%%%%%%%%%-----------------
+BEGIN
+DBMS_RLS.add_policy
+(object_schema => 'SYSTEM',
+object_name => 'NhanVien',
+policy_name => 'ThongTin_CaNhan',
+statement_types => 'UPDATE',
+update_check => true,
+sec_relevant_cols => 'DIACHILIENLAC, SDT',
 policy_function => 'KhongXemNhanVienKhac'); -- the name of a PL/SQL function
 END;
 -----------------%%%%%%%%%%%%%%%%%%%-----------------
