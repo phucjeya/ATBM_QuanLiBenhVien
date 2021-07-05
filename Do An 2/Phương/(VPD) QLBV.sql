@@ -1,3 +1,8 @@
+create view view_NhanVien as
+    select * from NHANVIEN;
+create view Luong_NhanVien as
+    select MANV, HOTEN, GIOITINH, LUONG
+    from NhanVien;
 -----------------%%%%%%%%%%%%%%%%%%%-----------------
 --Thuc hien chinh sach: Bac si chi co the them hoac sua thong tin lien quan den viec dieu tri benh
 --ma bac si chiu trach nhiem dieu tri. Bac si khong duoc xem hoac chinh sua thong tin khac cua nhung
@@ -55,7 +60,7 @@ BEGIN
 DBMS_RLS.add_policy
 (object_schema => 'SYSTEM',
 object_name => 'NhanVien',
-policy_name => 'ThongTin_CaNhan',
+policy_name => 'view_ThongTin_CaNhan',
 statement_types => 'SELECT',
 update_check => true,
 policy_function => 'KhongXemNhanVienKhac'); -- the name of a PL/SQL function
@@ -65,10 +70,10 @@ BEGIN
 DBMS_RLS.add_policy
 (object_schema => 'SYSTEM',
 object_name => 'NhanVien',
-policy_name => 'ThongTin_CaNhan',
+policy_name => 'ThongTin_CaNhan2',
 statement_types => 'UPDATE',
 update_check => true,
-sec_relevant_cols => 'DIACHILIENLAC, SDT',
+sec_relevant_cols => 'HOTEN, DIACHILIENLAC, SDT',
 policy_function => 'KhongXemNhanVienKhac'); -- the name of a PL/SQL function
 END;
 -----------------%%%%%%%%%%%%%%%%%%%-----------------
