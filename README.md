@@ -12,3 +12,4 @@ ER: https://app.diagrams.net/#G15HkWnvkED7fLbsPW3W9hzX-OwUxThBwe
 FULL source code: https://drive.google.com/file/d/1aAVJ6rAaKm3_FHr-aaS8HAMipnRJflPI/view?usp=sharing
 
 chú ý : các cơ chế bảo mật nên thực hiện chung trong một ứng dụng. Tác giả đã làm rời rạc trên các ứng dụng khác nhau và chưa sửa lại
+Người xem nên gộp chung vào một ứng dụng để phản ảnh đúng với một ứng dụng quản lí 
